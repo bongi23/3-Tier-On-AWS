@@ -1,4 +1,9 @@
 ############## Common ########################
+variable "availability_zones" {
+  type        = list(string)
+  description = "AZs where to deploy the network"
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}
@@ -25,17 +30,11 @@ variable "vpc_enable_dns_support" {
 
 variable "vpc_name" {
   type        = string
-  default     = "SatispayAssessment"
   description = "Name tag for the VPC."
 }
 
 #################################################
 ############### Subnets variables ###############
-variable "availability_zones" {
-  type        = list(string)
-  description = "AZs where to deploy the subnets"
-}
-
 variable "public_subnet_cidrs" {
   type        = list(string)
   description = "CIDRs for the public subnets"
