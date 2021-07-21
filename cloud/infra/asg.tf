@@ -1,6 +1,6 @@
 
 resource "aws_autoscaling_group" "application" {
-  tags = var.tags
+  tags                = var.tags
   max_size            = var.app_server_max
   min_size            = var.app_server_min
   desired_capacity    = var.app_server_desired
@@ -16,7 +16,7 @@ resource "aws_autoscaling_group" "application" {
 }
 
 resource "aws_autoscaling_group" "public" {
-  tags = var.tags
+  tags                = var.tags
   max_size            = var.web_server_max
   min_size            = var.web_server_min
   desired_capacity    = var.web_server_desired
@@ -32,7 +32,7 @@ resource "aws_autoscaling_group" "public" {
 }
 
 resource "aws_autoscaling_group" "application" {
-  tags = var.tags
+  tags                = var.tags
   max_size            = var.app_server_max
   min_size            = var.app_server_min
   desired_capacity    = var.app_server_desired
@@ -49,7 +49,7 @@ resource "aws_autoscaling_group" "application" {
 
 
 resource "aws_autoscaling_group" "data" {
-  tags = var.tags
+  tags                = var.tags
   max_size            = var.db_replicas
   min_size            = var.db_replicas
   desired_capacity    = var.db_replicas

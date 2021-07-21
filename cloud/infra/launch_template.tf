@@ -8,9 +8,9 @@ resource "aws_launch_template" "application" {
   image_id               = var.app_server_ami
   instance_type          = var.app_server_instance_size
 
-  iam_instance_profile {
-    name = aws_iam_instance_profile.application.name
-  }
+  #  iam_instance_profile {
+  #    name = aws_iam_instance_profile.application.name
+  #  }
 
   network_interfaces {
     associate_public_ip_address = true
@@ -19,7 +19,7 @@ resource "aws_launch_template" "application" {
 
   tag_specifications {
     resource_type = "instance"
-    tags = var.tags
+    tags          = var.tags
   }
 }
 
@@ -33,9 +33,9 @@ resource "aws_launch_template" "public" {
   image_id               = var.web_server_ami
   instance_type          = var.web_server_instance_size
 
-  iam_instance_profile {
-    name = aws_iam_instance_profile.public.name
-  }
+  #  iam_instance_profile {
+  #    name = aws_iam_instance_profile.application.name
+  #  }
 
   network_interfaces {
     associate_public_ip_address = true
@@ -44,7 +44,7 @@ resource "aws_launch_template" "public" {
 
   tag_specifications {
     resource_type = "instance"
-    tags = var.tags
+    tags          = var.tags
   }
 }
 
@@ -58,9 +58,9 @@ resource "aws_launch_template" "public" {
   image_id               = var.data_ami
   instance_type          = var.data_instance_size
 
-  iam_instance_profile {
-    name = aws_iam_instance_profile.data.name
-  }
+  #  iam_instance_profile {
+  #    name = aws_iam_instance_profile.application.name
+  #  }
 
   network_interfaces {
     associate_public_ip_address = true
@@ -69,6 +69,6 @@ resource "aws_launch_template" "public" {
 
   tag_specifications {
     resource_type = "instance"
-    tags = var.tags
+    tags          = var.tags
   }
 }
