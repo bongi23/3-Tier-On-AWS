@@ -24,3 +24,17 @@ resource "aws_lb_target_group" "public_targets" {
 
   tags = var.tags
 }
+
+
+resource "aws_lb_target_group" "data_targets" {
+  port                 = var.data_listener_port
+  vpc_id               = var.vpc_id
+  deregistration_delay = 60
+  protocol             = var.data_listener_protocol
+
+  health_check {
+    protocol = "TCP"
+  }
+
+  tags = var.tags
+}
