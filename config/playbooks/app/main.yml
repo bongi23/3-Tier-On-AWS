@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Copy nginx unit repo file
+      ansible.builtin.copy:
+        src: unit.repo
+        dest: /etc/yum.repos.d/unit.repo
+        mode: '0644'
+    - name: Install nginx unit
+      yum:
+        name:
+          - unit
+          - unit-python37
+        state: present

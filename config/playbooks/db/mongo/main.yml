@@ -1,0 +1,26 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: mongo.repo
+        dest: /etc/yum.repos.d/mongodb-org-5.0.repo
+        mode: '0644'
+    - name: Install the latest version of Mongo
+      yum:
+        name: mongodb-org
+        state: latest
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: mongo.conf
+        dest: /etc/mongod.conf
+        owner: mongod
+        group: mongod
+        mode: '0644'
+    - name: Start service mongo, if not started
+      ansible.builtin.service:
+        name: mongod
+        state: started
+        enabled: yes

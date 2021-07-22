@@ -5,12 +5,10 @@ resource "aws_launch_template" "application" {
   description = "Launch template for the application server."
 
   update_default_version = true
-  image_id               = var.app_server_ami
-  instance_type          = var.app_server_instance_size
+  image_id               = var.application_ami
+  instance_type          = var.application_instance_size
 
-  #  iam_instance_profile {
-  #    name = aws_iam_instance_profile.application.name
-  #  }
+  key_name = aws_key_pair.default.key_name
 
   network_interfaces {
     associate_public_ip_address = true
@@ -33,9 +31,7 @@ resource "aws_launch_template" "public" {
   image_id               = var.web_server_ami
   instance_type          = var.web_server_instance_size
 
-  #  iam_instance_profile {
-  #    name = aws_iam_instance_profile.application.name
-  #  }
+  key_name = aws_key_pair.default.key_name
 
   network_interfaces {
     associate_public_ip_address = true
@@ -49,7 +45,7 @@ resource "aws_launch_template" "public" {
 }
 
 
-resource "aws_launch_template" "public" {
+resource "aws_launch_template" "data" {
   tags = var.tags
 
   description = "Launch template for the web server."
@@ -58,9 +54,7 @@ resource "aws_launch_template" "public" {
   image_id               = var.data_ami
   instance_type          = var.data_instance_size
 
-  #  iam_instance_profile {
-  #    name = aws_iam_instance_profile.application.name
-  #  }
+  key_name = aws_key_pair.default.key_name
 
   network_interfaces {
     associate_public_ip_address = true

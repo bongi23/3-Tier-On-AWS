@@ -73,7 +73,7 @@ resource "aws_security_group" "application" {
 
 resource "aws_security_group" "data" {
   tags        = var.tags
-  name        = "AppServerSG"
+  name        = "DBSG"
   description = "Allow app server traffic"
   vpc_id      = var.vpc_id
 

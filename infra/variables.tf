@@ -29,6 +29,12 @@ variable "tags" {
   default     = {}
   description = "Tags for all the resources created"
 }
+
+variable "ssh_pubkey" {
+  type = string
+  description = "SSH public key for the EC2 instances the ASGs will create"
+}
+
 ####################################################################
 ############################## Load Balancer variables #############
 variable "application_subnets" {
@@ -79,29 +85,25 @@ variable "data_listener_protocol" {
 }
 ######################################################################
 ################## Autoscaling group variables ############################
-variable "app_server_max" {
+variable "application_max" {
   type        = number
   default     = 2
   description = "Max scale out for the app server"
 }
-variable "app_server_min" {
+variable "application_min" {
   type        = number
   default     = 1
   description = "Min scale in for app server"
 }
-variable "app_server_desired" {
+variable "application_desired" {
   type        = number
   default     = 1
   description = "Desired capacity for app server"
 }
-variable "app_server_cooldown" {
+variable "application_cooldown" {
   type        = number
   default     = 300
   description = "Cooldown period for app server"
-}
-variable "app_server_subnets" {
-  type        = list(string)
-  description = "Subnets for the application server"
 }
 
 variable "web_server_max" {
@@ -119,10 +121,7 @@ variable "web_server_desired" {
   default     = 1
   description = "Desired capacity for the web server"
 }
-variable "web_server_subnets" {
-  type        = list(string)
-  description = "Subnets for the web server"
-}
+
 variable "web_server_cooldown" {
   type        = number
   default     = 300
@@ -147,15 +146,15 @@ variable "data_subnets" {
 }
 ###################################################################################
 ########################### Launch Template variables #############################
-variable "app_server_instance_size" {
+variable "application_instance_size" {
   type        = string
   default     = "t3.micro"
   description = "Instanze size for the application server"
 }
 
-variable "app_server_ami" {
+variable "application_ami" {
   type        = string
-  default     = "ami-0737455407c1986d6" # amazon linux 2 in eu-south-1
+  default     = "ami-00f22f6155d6d92c5" # amazon linux 2 in eu-central-1
   description = "AMI for the application server"
 }
 
@@ -167,7 +166,7 @@ variable "web_server_instance_size" {
 
 variable "web_server_ami" {
   type        = string
-  default     = "ami-0737455407c1986d6" # amazon linux 2 in eu-south-1
+  default     = "ami-00f22f6155d6d92c5" # amazon linux 2 in eu-central-1
   description = "AMI for the web server"
 }
 
@@ -179,6 +178,6 @@ variable "data_instance_size" {
 
 variable "data_ami" {
   type        = string
-  default     = "ami-0737455407c1986d6" # amazon linux 2 in eu-south-1
+  default     = "ami-00f22f6155d6d92c5" # amazon linux 2 in eu-central-1
   description = "AMI for the db server"
 }
