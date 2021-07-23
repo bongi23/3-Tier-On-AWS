@@ -8,21 +8,6 @@ locals {
     }, var.tags)
   }]
 
-  application_subnets_data = [for cidr_block in var.application_subnet_cidrs : {
-    availability_zone = var.availability_zones[index(var.application_subnet_cidrs, cidr_block) % length(var.availability_zones)]
-    cidr_block        = cidr_block
-    tags = merge({
-      layer = "Application"
-    }, var.tags)
-  }]
-
-  data_subnets_data = [for cidr_block in var.data_subnet_cidrs : {
-    availability_zone = var.availability_zones[index(var.data_subnet_cidrs, cidr_block) % length(var.availability_zones)]
-    cidr_block        = cidr_block
-    tags = merge({
-      layer = "Data"
-    }, var.tags)
-  }]
   #################################################
   ############ NAT Gateway data ###################
   # this variable is used to keep the association between AZ and subnet, in order to

@@ -39,13 +39,3 @@ variable "public_subnet_cidrs" {
   type        = list(string)
   description = "CIDRs for the public subnets"
 }
-
-variable "data_subnet_cidrs" {
-  type        = list(string)
-  description = "CIDRs for the data subnets"
-}
-
-variable "application_subnet_cidrs" {
-  type        = list(string)
-  description = "CIDRs for the application subnets"
-}
