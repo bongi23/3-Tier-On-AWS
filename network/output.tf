@@ -5,7 +5,7 @@ output "vpc" {
 
 output "public_subnets" {
   description = "Public subnets data"
-  value       = aws_subnet.public
+  value       = aws_subnet.default
 }
 
 output "internet_gw" {

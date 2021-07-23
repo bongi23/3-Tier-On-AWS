@@ -82,6 +82,6 @@ variable "ami" {
 }
 
 variable "ec2_cidr_az_mapping" {
-  type        = object({ az = string })
-  description = "Mapping az -> cidr for the servers"
+  type        = map(string)
+  description = "Mappings az -> cidr for the servers"
 }

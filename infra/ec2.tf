@@ -7,8 +7,8 @@ resource "aws_instance" "default" {
   instance_type = var.instance_size
 
   associate_public_ip_address = var.associate_public_ip
-  availability_zone           = ""
-  subnet_id                   = ""
+  availability_zone           = each.key
+  subnet_id                   = each.value
   vpc_security_group_ids      = concat(var.extra_sg_id, [aws_security_group.default.id])
   tags                        = var.tags
   key_name                    = aws_key_pair.default.key_name

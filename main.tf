@@ -25,6 +25,8 @@ module "infra" {
   #Subnets CIDRs
   public_subnets_cidr = [for subnet in module.network.public_subnets : subnet.cidr_block]
 
+  ec2_cidr_az_mapping = { for subnet in module.network.public_subnets: subnet.availability_zone => subnet.id }
+
   ssh_pubkey             = file("id_rsa.pub")
   ssh_sources            = ["0.0.0.0/0"]
   external_traffic_cidrs = ["0.0.0.0/0"]
