@@ -46,6 +46,8 @@ if __name__ == '__main__':
     instances_ip = [instance.get('PublicIpAddress', "") for instances in response.get('Reservations', []) for instance in
                     instances.get('Instances', []) if instance.get('State', {}).get('Name', {}) != "terminated"]
 
+    logging.info(f"Instances found: {instances_ip}")
+
     with open('inventory.ini', 'w+') as inventory:
         for ip in instances_ip:
             inventory.write(ip+'\n')

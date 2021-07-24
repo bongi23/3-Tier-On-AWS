@@ -1,6 +1,64 @@
 ---
-- hosts: localhost
+- hosts: all
   become: true
   become_method: sudo
   tasks:
-    - command: "amazon-linux-extras nginx1"
+    - name: Install nginx
+      command: "amazon-linux-extras install nginx1 -y"
+    - name: Copy app to remote server
+      copy:
+        src: ../../../src/web/app.py
+        dest: /var/www/web/
+        mode: '0755'
+    - name: Copy wsgi to remote server
+      copy:
+        src: ../../../src/web/wsgi.py
+        dest: /var/www/web/
+        mode: '0755'
+    - name: Copy dependencies to remote server
+      copy:
+        src: ../../../src/web/requirements.txt
+        dest: /var/www/web/
+        mode: '0644'
+    - name: Create python venv
+      command: "python3 -m venv /var/www/web/venv"
+    - name: Install specified python requirements in indicated (virtualenv)
+      pip:
+        requirements: /var/www/web/requirements.txt
+        virtualenv: /var/www/web/venv
+    - name: Update file and folder permissions
+      command: "chown -R nginx:nginx /var/www/web"
+    - name: Create sites-available directory if it does not exist
+      ansible.builtin.file:
+        path: /etc/nginx/sites-available/
+        state: directory
+        mode: '0755'
+    - name: Create sites-enabled directory if it does not exist
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/
+        state: directory
+        mode: '0755'
+    - name: Copy app conf to remote server
+      copy:
+        src: ../../../src/web/web.conf
+        dest: /etc/nginx/sites-available/application.conf
+        mode: '0644'
+    - name: Create a link to the site-enabled directory
+      command: "ln -s /etc/nginx/sites-available/application.conf /etc/nginx/sites-enabled/"
+    - name: Re(start) nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+    - name: Copy service conf
+      copy:
+        src: ../../../src/web/service
+        dest: /etc/systemd/system/application.service
+        mode: '0644'
+    - name: Re(start) application service
+      service:
+        name: application.service
+        state: started
+        enabled: yes
+    - name: Re(start) daemon service
+      command: "systemctl daemon-reload"

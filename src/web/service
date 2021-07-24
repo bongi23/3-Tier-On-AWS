@@ -1,0 +1,13 @@
+[Unit]
+Description=application.service - A Flask application run with Gunicorn.
+After=network.target
+
+[Service]
+User=nginx
+Group=nginx
+Environment="PATH=/var/www/web/venv/bin"
+WorkingDirectory=/var/www/web/
+ExecStart=/var/www/web/venv/bin/gunicorn --workers 3 --bind unix:/var/www/web/application.sock wsgi:app
+
+[Install]
+WantedBy=multi-user.target
