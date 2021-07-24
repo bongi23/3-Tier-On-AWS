@@ -76,8 +76,8 @@ variable "instance_size" {
 }
 
 variable "ami" {
-  type = string
-  default = "ami-00f22f6155d6d92c5" # amazon linux 2 in eu-centra-1
+  type        = string
+  default     = "ami-00f22f6155d6d92c5" # amazon linux 2 in eu-centra-1
   description = "AMI for the servers"
 }
 
@@ -87,7 +87,7 @@ variable "ec2_cidr_az_mapping" {
 }
 
 variable "db_port" {
-  type = number
-  default = 27017
+  type        = number
+  default     = 27017
   description = "DB port"
 }

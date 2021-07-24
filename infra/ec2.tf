@@ -10,7 +10,7 @@ resource "aws_instance" "default" {
   availability_zone           = each.key
   subnet_id                   = each.value
   vpc_security_group_ids      = concat(var.extra_sg_id, [aws_security_group.default.id])
-  tags                        = merge(var.tags, {Role = "WebServer"})
+  tags                        = merge(var.tags, { Role = "WebServer" })
   key_name                    = aws_key_pair.default.key_name
 
 }
