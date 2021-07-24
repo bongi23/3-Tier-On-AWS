@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     response = ec2.describe_instances(Filters=tag_list)
     instances_ip = [instance.get('PublicIpAddress', "") for instances in response.get('Reservations', []) for instance in
-                    instances.get('Instances', [])]
+                    instances.get('Instances', []) if instance.get('State', {}).get('Name', {}) != "terminated"]
 
     with open('inventory.ini', 'w+') as inventory:
         for ip in instances_ip:

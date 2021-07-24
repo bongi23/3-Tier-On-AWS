@@ -11,3 +11,11 @@ resource "aws_lb_target_group" "default" {
 
   tags = var.tags
 }
+
+resource "aws_lb_target_group_attachment" "test" {
+  for_each = aws_instance.default
+
+  target_group_arn = aws_lb_target_group.default.arn
+  target_id        = each.value.id
+  port             = var.public_listener_port
+}

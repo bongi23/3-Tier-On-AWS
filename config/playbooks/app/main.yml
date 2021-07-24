@@ -14,3 +14,39 @@
           - unit
           - unit-python37
         state: present
+    - name: Start unit service
+      service:
+        name: unit
+        state: started
+        enabled: yes
+    - name: Copy app to remote server
+      copy:
+        src: ../../../src/app/app.py
+        dest: /var/www/app/
+        owner: unit
+        group: unit
+        mode: '0755'
+    - name: Copy app config remote server
+      copy:
+        src: ../../../src/app/conf.json
+        dest: /var/www/app/
+        owner: unit
+        group: unit
+        mode: '0644'
+    - name: Copy dependencies to remote server
+      copy:
+        src: ../../../src/app/requirements.txt
+        dest: /var/www/app/
+        owner: unit
+        group: unit
+        mode: '0644'
+    - name: Create python venv
+      command: "python3 -m venv /var/www/app/venv"
+    - name: Install specified python requirements in indicated (virtualenv)
+      pip:
+        requirements: /var/www/app/requirements.txt
+        virtualenv: /var/www/app/venv
+    - name: Update file and folder permissions
+      command: "chown -R unit:unit /var/www/app"
+    - name: Update unit config
+      command: "curl -X PUT --data-binary @/var/www/app/conf.json --unix-socket /var/run/unit/control.sock http://localhost/config/"
