@@ -7,3 +7,7 @@ terraform.tfstate.backup
 
 # IntelliJ
 .idea
+
+# Python
+*pycache*
+*venv*

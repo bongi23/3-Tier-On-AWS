@@ -85,3 +85,9 @@ variable "ec2_cidr_az_mapping" {
   type        = map(string)
   description = "Mappings az -> cidr for the servers"
 }
+
+variable "db_port" {
+  type = number
+  default = 27017
+  description = "DB port"
+}

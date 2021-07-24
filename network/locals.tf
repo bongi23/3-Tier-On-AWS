@@ -7,15 +7,4 @@ locals {
       layer = "Public"
     }, var.tags)
   }]
-
-  #################################################
-  ############ NAT Gateway data ###################
-  # this variable is used to keep the association between AZ and subnet, in order to
-  # deploy the NAT GW in the correct subnets
-  nat_gateways_data = [for i in range(min(length(var.availability_zones), length(var.public_subnet_cidrs))) : {
-    availability_zone = var.availability_zones[i]
-    cidr_block        = local.public_subnets_data[i].cidr_block
-    tags              = var.tags
-  }]
-
 }

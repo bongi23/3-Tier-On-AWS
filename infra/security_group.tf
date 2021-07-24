@@ -14,6 +14,14 @@ resource "aws_security_group" "default" {
   }
 
   ingress {
+    description = "Traffic for DB"
+    from_port   = var.db_port
+    to_port     = var.db_port
+    protocol    = "tcp"
+    cidr_blocks = var.ingress_traffic_cidrs
+  }
+
+  ingress {
     description = "SSH to web server"
     from_port   = 22
     to_port     = 22
