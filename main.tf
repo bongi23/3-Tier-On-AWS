@@ -1,7 +1,7 @@
 locals {
   tags = {
     Project = "Satispay"
-    Env     = "Prod"
+    Env     = "Dev"
     Author  = "Andrea Bongiorno"
   }
 }
@@ -17,24 +17,26 @@ module "network" {
 
 module "infra" {
   source = "./infra"
-  vpc_id = module.network.vpc.id
 
+  vpc_id = module.network.vpc.id
   # Subnets IDs
   public_subnets = [for subnet in module.network.public_subnets : subnet.id]
-
   #Subnets CIDRs
   subnets_cidr = [for subnet in module.network.public_subnets : subnet.cidr_block]
-
+  # Mapping from az to subnet cidr, it is used to deploy EC2 in the correct subnets
   ec2_cidr_az_mapping = { for subnet in module.network.public_subnets : subnet.availability_zone => subnet.id }
-
-  ssh_pubkey             = file("id_rsa.pub")
-
-  ssh_sources            = ["0.0.0.0/0"]
+  # Public key to be imported to AWS, allows you to use your own SSH private key when connecting to EC2
+  ssh_pubkey = file("id_rsa.pub")
+  # CIDR allowed to SSH into the deployed EC2
+  ssh_sources = ["0.0.0.0/0"]
+  # CIDR for the egress rule of the EC2
   external_traffic_cidrs = ["0.0.0.0/0"]
-  ingress_traffic_cidrs  = ["0.0.0.0/0"]
+  # CIDR allowed to reach the web layer
+  ingress_traffic_cidrs = ["0.0.0.0/0"]
+
+  # USE PRIVATE ADDRESSES TO AVOID THE EXPOSURE OF THE APPLICATION AND THE DATA LAYER
+  db_allowed_cidr           = [module.network.vpc.cidr_block]
+  application_allowed_cidrs = [module.network.vpc.cidr_block]
 
   tags = local.tags
-
-  db_allowed_cidr = [module.network.vpc.cidr_block]
-  application_allowed_cidrs = [module.network.vpc.cidr_block]
 }

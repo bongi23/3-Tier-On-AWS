@@ -8,6 +8,9 @@ app = Flask(__name__)
 
 
 class JSONEncoder(json.JSONEncoder):
+    """
+    This is a utility class used to convert some fields of MongoDB objects to str
+    """
     def default(self, o):
         if isinstance(o, ObjectId):
             return str(o)
@@ -23,9 +26,9 @@ retries = 10
 while mongo is None:
     try:
         mongo = MongoClient('localhost', replicaset='satispay-repl')
-    except:
+    except Exception as e:
         if retries == 0:
-            raise Exception("Impossibile to establish DB connection")
+            raise Exception(f"Impossible to establish a connection to the database: {str(e)}")
         else:
             retries -= 1
             time.sleep(30)
@@ -45,8 +48,10 @@ def find():
     if find_query_string.get('collection', None):
         del find_query_string['collection']
     docs = []
+    # iterate of the cursor returned by MongoClient
     for doc in db[collection].find(find_query_string, {'_id': 0}):
         docs.append(doc)
+
     return jsonify(docs)
 
 
@@ -68,7 +73,13 @@ def insert():
     collection = insert_query.get('collection', "default")
     if insert_query.get('collection', None):
         del insert_query['collection']
-    return jsonify(JSONEncoder().encode(db[collection].insert(insert_query['doc'])))
+    if not insert_query.get('doc', None):
+        return "Error: you should specify a 'doc' field on the input json."
+    obj_id = db[collection].insert(insert_query['doc'])
+    if obj_id:
+        return "The document has been correctly inserted."
+    else:
+        return "Error while inserting the document!"
 
 
 @app.route("/update", methods=['PUT'])
@@ -90,7 +101,13 @@ def update():
     collection = update_query.get('collection', "default")
     if update_query.get('collection', None):
         del update_query['collection']
-    return jsonify(JSONEncoder().encode(db[collection].update(update_query['query'], update_query['doc'])))
+    if not update_query.get('doc', None):
+        return "Error: you must specify a set of key/values to be updated!"
+    update_res = db[collection].update_many(update_query.get('query', {}), update_query['doc'])
+    if update_res:
+        return f"{update_res['nModified']} documents have been updated."
+    else:
+        return "Error while updating documents."
 
 
 @app.route("/delete", methods=['POST'])
@@ -110,4 +127,7 @@ def delete():
     collection = delete_query.get('collection', "default")
     if delete_query.get('collection', None):
         del delete_query['collection']
-    return jsonify(JSONEncoder().encode(db[collection].delete_many(delete_query['query']).deleted_count))
+    qry_res = db[collection].delete_many(delete_query['query'])
+    if qry_res:
+        return f"{qry_res.deleted_count} documents have been deleted."
+    return "Error while deleting documents"

@@ -4,7 +4,6 @@ resource "aws_lb" "default" {
   internal           = false
   subnets            = var.public_subnets
   security_groups    = [aws_security_group.default.id]
-  tags = merge(var.tags, {
-    layer = "Public"
-  })
+  tags               = var.tags
+
 }

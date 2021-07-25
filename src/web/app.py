@@ -5,7 +5,7 @@ app = Flask(__name__)
 APP_SERVICE_URI = "http://0.0.0.0:8080"
 
 
-@app.route("/hello")
+@app.route("/health")
 def hello_world():
     return "Hello, World!"
 

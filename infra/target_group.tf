@@ -5,11 +5,13 @@ resource "aws_lb_target_group" "default" {
   deregistration_delay = 60
   protocol             = var.public_listener_protocol
 
-  #health_check {
-  #  protocol = "HTTP"
-  #}
+  health_check {
+    protocol = "HTTP"
+    path     = "/health"
+  }
 
-  tags = var.tags
+  name = "${lookup(var.tags, "Project", "")}WebServer"
+  tags = merge(var.tags, { Name = "${lookup(var.tags, "Project", "")}WebServer" })
 }
 
 resource "aws_lb_target_group_attachment" "test" {

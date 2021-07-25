@@ -2,7 +2,7 @@
 
 resource "aws_security_group" "default" {
   tags        = var.tags
-  name        = "WebServerSG"
+  name        = "${lookup(var.tags, "Project", "")}WebServerSG"
   description = "Allow web server traffic"
   vpc_id      = var.vpc_id
 
@@ -51,6 +51,14 @@ resource "aws_security_group" "default" {
     to_port     = var.db_port
     protocol    = "tcp"
     cidr_blocks = var.db_allowed_cidr
+  }
+
+  egress {
+    description = "Traffic for application"
+    from_port   = var.application_listener_port
+    to_port     = var.application_listener_port
+    protocol    = "tcp"
+    cidr_blocks = var.application_allowed_cidrs
   }
 
 }
