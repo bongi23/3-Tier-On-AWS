@@ -1,4 +1,5 @@
 # ref: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+
 resource "aws_security_group" "default" {
   tags        = var.tags
   name        = "WebServerSG"
@@ -18,7 +19,7 @@ resource "aws_security_group" "default" {
     from_port   = var.db_port
     to_port     = var.db_port
     protocol    = "tcp"
-    cidr_blocks = var.ingress_traffic_cidrs
+    cidr_blocks = var.db_allowed_cidr
   }
 
   ingress {

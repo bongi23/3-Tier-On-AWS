@@ -28,10 +28,12 @@ module "infra" {
   ec2_cidr_az_mapping = { for subnet in module.network.public_subnets : subnet.availability_zone => subnet.id }
 
   ssh_pubkey             = file("id_rsa.pub")
+
   ssh_sources            = ["0.0.0.0/0"]
   external_traffic_cidrs = ["0.0.0.0/0"]
   ingress_traffic_cidrs  = ["0.0.0.0/0"]
 
   tags = local.tags
 
+  db_allowed_cidr = [module.network.vpc.cidr_block]
 }

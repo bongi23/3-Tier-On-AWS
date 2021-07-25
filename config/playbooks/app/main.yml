@@ -2,6 +2,8 @@
 - hosts: all
   become: true
   become_method: sudo
+  vars_files:
+    - vars.yml
   tasks:
     - name: Copy nginx unit repo file
       ansible.builtin.copy:
@@ -21,32 +23,32 @@
         enabled: yes
     - name: Copy app to remote server
       copy:
-        src: ../../../src/app/app.py
-        dest: /var/www/app/
+        src: "{{src_app_home}}/app.py"
+        dest: "{{dest_app_home}}/"
         owner: unit
         group: unit
         mode: '0755'
     - name: Copy app config remote server
       copy:
-        src: ../../../src/app/conf.json
-        dest: /var/www/app/
+        src: "{ { src_app_home } }/conf.json"
+        dest: "{{dest_app_home}}/"
         owner: unit
         group: unit
         mode: '0644'
     - name: Copy dependencies to remote server
       copy:
-        src: ../../../src/app/requirements.txt
-        dest: /var/www/app/
+        src: "{{src_app_home}}/requirements.txt"
+        dest: "{{dest_app_home}}/"
         owner: unit
         group: unit
         mode: '0644'
     - name: Create python venv
-      command: "python3 -m venv /var/www/app/venv"
+      command: "python3 -m venv {{dest_app_home}}/venv"
     - name: Install specified python requirements in indicated (virtualenv)
       pip:
-        requirements: /var/www/app/requirements.txt
-        virtualenv: /var/www/app/venv
+        requirements: "{ { src_app_home } }/requirements.txt"
+        virtualenv: "{{dest_app_home}}/venv"
     - name: Update file and folder permissions
-      command: "chown -R unit:unit /var/www/app"
+      command: "chown -R unit:unit {{dest_app_home}}"
     - name: Update unit config
-      command: "curl -X PUT --data-binary @/var/www/app/conf.json --unix-socket /var/run/unit/control.sock http://localhost/config/"
+      command: "curl -X PUT --data-binary @{{dest_app_home}}/conf.json --unix-socket /var/run/unit/control.sock http://localhost/config/"

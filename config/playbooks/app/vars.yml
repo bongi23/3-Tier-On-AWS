@@ -1,0 +1,3 @@
+---
+src_app_home: "../../../src/app" # folder of application code in the local host
+dest_app_home: "/var/www/app" # destination folder for the app

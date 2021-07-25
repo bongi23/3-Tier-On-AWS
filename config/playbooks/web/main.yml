@@ -2,49 +2,41 @@
 - hosts: all
   become: true
   become_method: sudo
+  vars_files:
+    - vars.yml
   tasks:
     - name: Install nginx
       command: "amazon-linux-extras install nginx1 -y"
     - name: Copy app to remote server
       copy:
-        src: ../../../src/web/app.py
-        dest: /var/www/web/
+        src: "{{web_src_home}}/app.py"
+        dest: "{{web_dst_home}}/"
         mode: '0755'
     - name: Copy wsgi to remote server
       copy:
-        src: ../../../src/web/wsgi.py
-        dest: /var/www/web/
+        src: "{{web_src_home}}/wsgi.py"
+        dest: "{{web_dst_home}}/"
         mode: '0755'
     - name: Copy dependencies to remote server
       copy:
-        src: ../../../src/web/requirements.txt
-        dest: /var/www/web/
+        src: "{{web_src_home}}/requirements.txt"
+        dest: "{{web_dst_home}}/"
         mode: '0644'
     - name: Create python venv
-      command: "python3 -m venv /var/www/web/venv"
+      command: "python3 -m venv {{web_dst_home}}/venv"
     - name: Install specified python requirements in indicated (virtualenv)
       pip:
-        requirements: /var/www/web/requirements.txt
-        virtualenv: /var/www/web/venv
+        requirements: "{{web_dst_home}}/requirements.txt"
+        virtualenv: "{{web_dst_home}}/venv"
     - name: Update file and folder permissions
-      command: "chown -R nginx:nginx /var/www/web"
-    - name: Create sites-available directory if it does not exist
-      ansible.builtin.file:
-        path: /etc/nginx/sites-available/
-        state: directory
-        mode: '0755'
-    - name: Create sites-enabled directory if it does not exist
-      ansible.builtin.file:
-        path: /etc/nginx/sites-enabled/
-        state: directory
-        mode: '0755'
+      command: "chown -R nginx:nginx {{web_dst_home}}"
     - name: Copy app conf to remote server
       copy:
-        src: ../../../src/web/web.conf
-        dest: /etc/nginx/sites-available/application.conf
+        src: "{{web_src_home}}/web.conf"
+        dest: /etc/nginx/nginx.conf
+        owner: nginx
+        group: nginx
         mode: '0644'
-    - name: Create a link to the site-enabled directory
-      command: "ln -s /etc/nginx/sites-available/application.conf /etc/nginx/sites-enabled/"
     - name: Re(start) nginx service
       service:
         name: nginx
@@ -52,7 +44,7 @@
         enabled: yes
     - name: Copy service conf
       copy:
-        src: ../../../src/web/service
+        src: "{{web_src_home}}/service"
         dest: /etc/systemd/system/application.service
         mode: '0644'
     - name: Re(start) application service

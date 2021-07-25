@@ -1,0 +1,3 @@
+---
+web_src_home: "../../../src/web"
+web_dst_home: "/var/www/web"

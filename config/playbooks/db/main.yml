@@ -2,6 +2,8 @@
 - hosts: all
   become: true
   become_method: sudo
+  vars_files:
+    - vars.yml
   tasks:
     - name: Copy file with owner and permissions
       ansible.builtin.copy:
@@ -14,7 +16,7 @@
         state: latest
     - name: Copy file with owner and permissions
       ansible.builtin.copy:
-        src: mongod.conf
+        src: "{{db_conf}}"
         dest: /etc/mongod.conf
         owner: mongod
         group: mongod
@@ -24,3 +26,18 @@
         name: mongod
         state: started
         enabled: yes
+    - name: Copy inventory file
+      ansible.builtin.copy:
+        src: "{{inventory_path}}"
+        dest: "{{db_dest_home}}/"
+        mode: '0644'
+    - name: Copy init RS script
+      ansible.builtin.copy:
+        src: "{{db_src_home}}/initRs.py"
+        dest: "{{db_dest_home}}/"
+        mode: '0644'
+    - name: Intall pymongo
+      command: "pip3 install pymongo"
+    - name: InitRS
+      command: "python3 {{ db_dest_home}}/initRs.py -i {{db_dest_home}}/inventory.ini -rs satispay-repl"
+      run_once: true

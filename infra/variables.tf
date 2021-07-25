@@ -91,3 +91,8 @@ variable "db_port" {
   default     = 27017
   description = "DB port"
 }
+
+variable "db_allowed_cidr" {
+  type = list(string)
+  description = "CIDR allowed to communicate with DB"
+}
