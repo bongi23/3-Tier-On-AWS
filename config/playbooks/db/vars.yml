@@ -1,0 +1,5 @@
+---
+db_conf: "./mongod.conf"
+db_src_home: "../../../src/db"
+db_dest_home: "/var/www/db"
+private_ip_file: "../../../deploy/private_ip"

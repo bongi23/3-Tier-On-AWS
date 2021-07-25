@@ -1,0 +1,43 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: mongo.repo
+        dest: /etc/yum.repos.d/mongodb-org-5.0.repo
+        mode: '0644'
+    - name: Install the latest version of Mongo
+      yum:
+        name: mongodb-org
+        state: latest
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: "{{db_conf}}"
+        dest: /etc/mongod.conf
+        owner: mongod
+        group: mongod
+        mode: '0644'
+    - name: Start service mongo, if not started
+      ansible.builtin.service:
+        name: mongod
+        state: started
+        enabled: yes
+    - name: Copy private ip file
+      ansible.builtin.copy:
+        src: "{{private_ip_file}}"
+        dest: "{{db_dest_home}}/"
+        mode: '0644'
+    - name: Copy init RS script
+      ansible.builtin.copy:
+        src: "{{db_src_home}}/initRs.py"
+        dest: "{{db_dest_home}}/"
+        mode: '0644'
+    - name: Intall pymongo
+      command: "pip3 install pymongo"
+    - name: InitRS
+      command: "python3 {{ db_dest_home}}/initRs.py -i {{ db_dest_home}}/private_ip -rs satispay-repl"
+      run_once: true

@@ -1,0 +1,54 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Copy nginx unit repo file
+      ansible.builtin.copy:
+        src: unit.repo
+        dest: /etc/yum.repos.d/unit.repo
+        mode: '0644'
+    - name: Install nginx unit
+      yum:
+        name:
+          - unit
+          - unit-python37
+        state: present
+    - name: Start unit service
+      service:
+        name: unit
+        state: started
+        enabled: yes
+    - name: Copy app to remote server
+      copy:
+        src: "{{src_app_home}}/app.py"
+        dest: "{{dest_app_home}}/"
+        owner: unit
+        group: unit
+        mode: '0755'
+    - name: Copy app config remote server
+      copy:
+        src: "{{src_app_home}}/conf.json"
+        dest: "{{dest_app_home}}/"
+        owner: unit
+        group: unit
+        mode: '0644'
+    - name: Copy dependencies to remote server
+      copy:
+        src: "{{src_app_home}}/requirements.txt"
+        dest: "{{dest_app_home}}/"
+        owner: unit
+        group: unit
+        mode: '0644'
+    - name: Create python venv
+      command: "python3 -m venv {{dest_app_home}}/venv"
+    - name: Install specified python requirements in indicated (virtualenv)
+      pip:
+        requirements: "{{dest_app_home}}/requirements.txt"
+        virtualenv: "{{dest_app_home}}/venv"
+    - name: Update file and folder permissions
+      command: "chown -R unit:unit {{dest_app_home}}"
+    - name: Update unit config
+      command: "curl -X PUT --data-binary @{{dest_app_home}}/conf.json --unix-socket /var/run/unit/control.sock http://localhost/config/"
