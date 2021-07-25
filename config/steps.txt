@@ -1,0 +1,7 @@
+Devo preparare uno script python che:
+
+1. recupera gli IP di db, app e web servers usando il tag "role"
+2. lancia i playbook ansible per la configurazione delle macchine, in particolare:
+    2.1: playbook mongo
+    2.2: playbook nginx
+    2.3: playbook nginx unit

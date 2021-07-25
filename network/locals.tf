@@ -30,7 +30,7 @@ locals {
   nat_gateways_data = [for i in range(min(length(var.availability_zones), length(var.public_subnet_cidrs))) : {
     availability_zone = var.availability_zones[i]
     cidr_block        = local.public_subnets_data[i].cidr_block
-    tags = var.tags
+    tags              = var.tags
   }]
 
 }

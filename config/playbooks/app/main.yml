@@ -1,0 +1,53 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Copy nginx unit repo file
+      copy:
+        src: unit.repo
+        dest: /etc/yum.repos.d/unit.repo
+        mode: '0644'
+    - name: Install nginx unit
+      yum:
+        name:
+          - unit
+          - unit-python37
+        state: present
+    - name: Start unit service, if not started
+      ansible.builtin.service:
+        name: unit
+        state: started
+        enabled: yes
+    - name: Create a directory for our application
+      file:
+        path: /var/www
+        state: directory
+        mode: "644"
+    - name: Copy application
+      copy:
+        src: ../../../src/app/app.py
+        dest: /var/www/app.py
+        mode: "644"
+    - name: Copy requirements
+      copy:
+        src: ../../../src/app/requirements.txt
+        dest: /var/www/requirements.txt
+        mode: "644"
+    - name: Copy application
+      copy:
+        src: ../../../src/app/flask_conf.json
+        dest: /var/www/flask_config.json
+        mode: "644"
+    - name: Install venv module
+      pip:
+        name: virtualenv
+        executable: /usr/bin/pip3
+    - name: Create python venv
+      command: python3 -m venv /var/www/venv
+    - name: Install specified python requirements in indicated (virtualenv)
+      pip:
+        requirements: /var/www/requirements.txt
+        virtualenv: /var/www/venv
+    - name: post to nginx unit
+      shell: "curl -X PUT --data-binary @/var/www/flask_config.json --unix-socket /var/run/unit/control.sock http://localhost/config/"
