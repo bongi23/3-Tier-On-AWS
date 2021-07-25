@@ -86,4 +86,11 @@ then
   exit 1
 fi
 
+RC=$(./tests.sh)
+if [[ $RC -ne 0 ]]
+then
+  echo "A problem occurred while executing tests!"
+  exit 1
+fi
+
 exit 0
