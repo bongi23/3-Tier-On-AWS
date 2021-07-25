@@ -11,6 +11,7 @@ terraform.tfstate.backup
 # Python
 *pycache*
 *venv*
+*pyc
 
 # App
 *private_ip*

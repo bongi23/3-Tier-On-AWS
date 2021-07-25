@@ -70,16 +70,23 @@ def insert():
     db = mongo['default']
     # get the query string as a dict
     insert_query = request.json
+    if not insert_query:
+        return jsonify({"errmsg": "No JSON body received"})
     collection = insert_query.get('collection', "default")
+
     if insert_query.get('collection', None):
         del insert_query['collection']
+
     if not insert_query.get('doc', None):
-        return "Error: you should specify a 'doc' field on the input json."
+        return jsonify({"errmsg":"You should specify a 'doc' field on the input json."})
+
     obj_id = db[collection].insert(insert_query['doc'])
+
     if obj_id:
-        return "The document has been correctly inserted."
+        return jsonify({"success": "The document has been correctly inserted."})
     else:
-        return "Error while inserting the document!"
+        return jsonify({"errmsg":"Error while inserting the document!"})
+
 
 
 @app.route("/update", methods=['PUT'])
@@ -98,16 +105,22 @@ def update():
     db = mongo['default']
     # get the query string as a dict
     update_query = request.json
+    if update_query is None:
+        return jsonify({"errmsg":"No JSON data received"})
+
     collection = update_query.get('collection', "default")
+
     if update_query.get('collection', None):
         del update_query['collection']
+
     if not update_query.get('doc', None):
-        return "Error: you must specify a set of key/values to be updated!"
-    update_res = db[collection].update_many(update_query.get('query', {}), update_query['doc'])
+        return jsonify({"errmsg": "You must specify a set of key/values to be updated!"})
+
+    update_res = db[collection].update(update_query.get('query', {}), update_query['doc'])
     if update_res:
-        return f"{update_res['nModified']} documents have been updated."
+        return jsonify({"success": f"{update_res['nModified']} documents have been updated."})
     else:
-        return "Error while updating documents."
+        return jsonify({"errmsg":"Error while updating the document!"})
 
 
 @app.route("/delete", methods=['POST'])
@@ -124,10 +137,16 @@ def delete():
     db = mongo['default']
     # get the query string as a dict
     delete_query = request.json
+    if not delete_query:
+        return jsonify({"errmsg":"No JSON data received"})
+
     collection = delete_query.get('collection', "default")
     if delete_query.get('collection', None):
         del delete_query['collection']
+
     qry_res = db[collection].delete_many(delete_query['query'])
+
     if qry_res:
-        return f"{qry_res.deleted_count} documents have been deleted."
-    return "Error while deleting documents"
+        return jsonify({"success":f"{qry_res.deleted_count} documents have been deleted."})
+
+    return jsonify({"errmsg": "Error while deleting documents"})

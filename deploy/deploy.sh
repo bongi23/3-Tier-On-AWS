@@ -52,13 +52,13 @@ cd "${PREC_DIR}"
 echo "Retrieving IP addresses for the deployed EC2..."
 source "${PYTHON_VENV_PATH}/bin/activate"
 python3 get_servers_ip.py -p "${AWS_PROFILE}" -t "Role=WebServer" -r "${AWS_REGION}" # creates two files, inventory.ini (it will be used by ansible) and private_ip (it will be used by mongo playbook)
-deactivate
-
 if [[ $? -ne 0 ]]
 then
   echo "A problem occurred while retrieving IP address. Exiting..."
   exit 1
 fi
+deactivate
+
 
 echo "Ready to config server!"
 export ANSIBLE_HOST_KEY_CHECKING=false

@@ -43,7 +43,12 @@ You need also to configure a *credentials* file for the AWS CLI, read [here](htt
 
 ### Deploy
 
-***NOTE: The architecture deployed will be open to the world. If you want to restrict access to the application, change the varibale values in main.tf. To understand the meaning of each value, take a look at the README.md into infra and network folders***
+***NOTE: The architecture deployed will be open to the world. If you want to restrict access to the application, 
+change the varibale values in main.tf. To understand the meaning of each value, take a look at the README.md 
+into infra and network folders***
+
+***IMPORTANT: substitute the id_rsa.pub file with your id_rsa.pub. Without doing this, Ansible will not be able to
+connect to the instance and configure them***
 
 You need to position into the *deploy* folder
 ```> cd deploy ```
