@@ -54,7 +54,7 @@ def update():
     # get data as json
     json_data = request.get_json()
     # forward request to app service
-    response = http_client.put(APP_SERVICE_URI+'/update', data=json_data)
+    response = http_client.put(APP_SERVICE_URI+'/update', json=json_data)
     return jsonify(response.json())
 
 
