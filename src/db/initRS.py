@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, errors
 import logging
 import argparse
 
@@ -27,4 +27,10 @@ if __name__ == '__main__':
 
     logging.info("Replica set init...")
     c = MongoClient(member[:-(1+len(str(args.port)))], args.port)
-    logging.info(c.admin.command("replSetInitiate", rs_config))
+    try:
+        res=c.admin.command("replSetInitiate", rs_config)
+    except errors.OperationFailure as e:
+        if 'already initialized' in str(e):
+            pass
+        else:
+            raise e
