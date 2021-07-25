@@ -68,3 +68,6 @@ Now you are ready to deploy!
 ```
 (venv)> ./deploy.sh <your_aws_profile> <aws_region_name>
 ```
+
+### Test
+It simple as `cd deploy && ./tests.sh` :)

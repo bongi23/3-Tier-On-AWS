@@ -30,7 +30,7 @@ fi
 echo "Success!"
 
 echo "Deleting the doc"
-RC=$(curl -s -X POST -H "Content-Type: application/json" --data '{"query":{"username": "xyz"}}' "${ELB_URI}/delete" > tmp| grep -i "success" -c)
+RC=$(curl -s -X POST -H "Content-Type: application/json" --data '{"query":{"username": "abc"}}' "${ELB_URI}/delete" > tmp| grep -i "success" -c)
 if [[ $RC -ne 0 ]]
 then
   echo "A problem occurred while updating the doc."
