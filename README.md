@@ -71,3 +71,6 @@ Now you are ready to deploy!
 
 ### Test
 It simple as `cd deploy && ./tests.sh` :)
+
+### Destroy Everything!!
+Once you have finished, run the following command: `terraform destroy --auto-approve`
