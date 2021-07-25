@@ -23,7 +23,7 @@ module "infra" {
   public_subnets = [for subnet in module.network.public_subnets : subnet.id]
 
   #Subnets CIDRs
-  public_subnets_cidr = [for subnet in module.network.public_subnets : subnet.cidr_block]
+  subnets_cidr = [for subnet in module.network.public_subnets : subnet.cidr_block]
 
   ec2_cidr_az_mapping = { for subnet in module.network.public_subnets : subnet.availability_zone => subnet.id }
 

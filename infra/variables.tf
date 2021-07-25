@@ -9,7 +9,7 @@ variable "ssh_sources" {
   description = "IP allowed to reach the EC2 using SSH"
 }
 
-variable "public_subnets_cidr" {
+variable "subnets_cidr" {
   type        = list(string)
   description = "Public (Web server) subnets cidr"
 }

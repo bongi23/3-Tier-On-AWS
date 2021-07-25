@@ -1,17 +1,13 @@
 #!/bin/bash
 
-# terraform plan
+terraform apply
 
-# terraform apply
+python3 get_servers_ip.py -p serverless-personal -t Role=WebServer
 
-# get inventory
+ansible-playbook -i inventory.ini ../config/playbooks/db/main.yml --user ec2-user
 
-# ansible db
+python3 initRS.py -i inventory.ini -rs satispay-repl
 
-# init replica set
+ansible-playbook -i inventory.ini ../config/playbooks/app/main.yml --user ec2-user
 
-# ansible app
-
-# ansible-galaxy install nginxinc.nginx
-
-# ansible web
+ansible-playbook -i inventory.ini ../config/playbooks/web/main.yml --user ec2-user
