@@ -1,8 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests as http_client
 app = Flask(__name__)
 
-APP_SERVICE_URI = "http://0.0.0.0:8080/"
+APP_SERVICE_URI = "http://0.0.0.0:8080"
 
 
 @app.route("/hello")
@@ -15,8 +15,8 @@ def find():
     # get the query string as a dict
     find_query_string = request.args.to_dict()
     # forward request to app service
-    response = http_client.get(APP_SERVICE_URI, params=find_query_string)
-    return response.json()
+    response = http_client.get(APP_SERVICE_URI+'/find', params=find_query_string)
+    return jsonify(response.json())
 
 
 @app.route("/insert", methods=['POST'])
@@ -34,8 +34,8 @@ def insert():
     # get the query string as a dict
     json_data = request.get_json()
     # forward request to app service
-    response = http_client.post(APP_SERVICE_URI, json=json_data)
-    return response.json()
+    response = http_client.post(APP_SERVICE_URI+'/insert', json=json_data)
+    return jsonify(response.json())
 
 
 @app.route("/update", methods=['PUT'])
@@ -54,8 +54,8 @@ def update():
     # get data as json
     json_data = request.get_json()
     # forward request to app service
-    response = http_client.put(APP_SERVICE_URI, data=json_data)
-    return response.json()
+    response = http_client.put(APP_SERVICE_URI+'/update', data=json_data)
+    return jsonify(response.json())
 
 
 @app.route("/delete", methods=['POST'])
@@ -72,5 +72,5 @@ def delete():
     # get data as json
     json_data = request.get_json()
     # forward request to app service
-    response = http_client.post(APP_SERVICE_URI, data=json_data)
-    return response.json()
+    response = http_client.post(APP_SERVICE_URI+'/delete', json=json_data)
+    return jsonify(response.json())

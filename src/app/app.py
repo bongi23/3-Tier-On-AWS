@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-import requests as http_client
 from pymongo import MongoClient
 import time
 import json

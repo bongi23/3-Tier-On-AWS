@@ -96,3 +96,14 @@ variable "db_allowed_cidr" {
   type = list(string)
   description = "CIDR allowed to communicate with DB"
 }
+
+variable "application_listener_port" {
+  type        = number
+  default     = 8080
+  description = "Application port"
+}
+
+variable "application_allowed_cidrs" {
+  type = list(string)
+  description = "CIDR allowed to communicate with the application"
+}

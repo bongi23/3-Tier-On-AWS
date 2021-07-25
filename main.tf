@@ -36,4 +36,5 @@ module "infra" {
   tags = local.tags
 
   db_allowed_cidr = [module.network.vpc.cidr_block]
+  application_allowed_cidrs = [module.network.vpc.cidr_block]
 }

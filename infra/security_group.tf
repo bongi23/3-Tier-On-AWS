@@ -15,6 +15,14 @@ resource "aws_security_group" "default" {
   }
 
   ingress {
+    description = "Traffic for application"
+    from_port   = var.application_listener_port
+    to_port     = var.application_listener_port
+    protocol    = "tcp"
+    cidr_blocks = var.application_allowed_cidrs
+  }
+
+  ingress {
     description = "Traffic for DB"
     from_port   = var.db_port
     to_port     = var.db_port
@@ -35,6 +43,14 @@ resource "aws_security_group" "default" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = var.external_traffic_cidrs
+  }
+
+  egress {
+    description = "Traffic for DB"
+    from_port   = var.db_port
+    to_port     = var.db_port
+    protocol    = "tcp"
+    cidr_blocks = var.db_allowed_cidr
   }
 
 }
