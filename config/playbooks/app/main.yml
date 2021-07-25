@@ -30,7 +30,7 @@
         mode: '0755'
     - name: Copy app config remote server
       copy:
-        src: "{ { src_app_home } }/conf.json"
+        src: "{{src_app_home}}/conf.json"
         dest: "{{dest_app_home}}/"
         owner: unit
         group: unit
@@ -46,7 +46,7 @@
       command: "python3 -m venv {{dest_app_home}}/venv"
     - name: Install specified python requirements in indicated (virtualenv)
       pip:
-        requirements: "{ { src_app_home } }/requirements.txt"
+        requirements: "{{dest_app_home}}/requirements.txt"
         virtualenv: "{{dest_app_home}}/venv"
     - name: Update file and folder permissions
       command: "chown -R unit:unit {{dest_app_home}}"

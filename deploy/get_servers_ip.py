@@ -43,13 +43,22 @@ if __name__ == '__main__':
     logging.info("Retrieving EC2 instances according to the specified tags.")
 
     response = ec2.describe_instances(Filters=tag_list)
-    instances_ip = [instance.get('PublicIpAddress', "") for instances in response.get('Reservations', []) for instance in
+    public_instances_ip = [instance.get('PublicIpAddress', "") for instances in response.get('Reservations', []) for instance in
                     instances.get('Instances', []) if instance.get('State', {}).get('Name', {}) != "terminated"]
 
-    logging.info(f"Instances found: {instances_ip}")
+    logging.info(f"Public IPs found: {public_instances_ip}")
 
     with open('inventory.ini', 'w+') as inventory:
-        for ip in instances_ip:
+        for ip in public_instances_ip:
+            inventory.write(ip+'\n')
+
+    private_instances_ip = [instance.get('PrivateIpAddress', "") for instances in response.get('Reservations', []) for instance in
+                           instances.get('Instances', []) if instance.get('State', {}).get('Name', {}) != "terminated"]
+
+    logging.info(f"Private IPs found: {private_instances_ip}")
+
+    with open('private_ip', 'w+') as inventory:
+        for ip in private_instances_ip:
             inventory.write(ip+'\n')
 
     logging.info("Complete.")
